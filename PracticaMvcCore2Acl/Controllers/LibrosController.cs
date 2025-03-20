@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using PracticaMvcCore2Acl.Extensions;
 using PracticaMvcCore2Acl.Filters;
 using PracticaMvcCore2Acl.Models;
@@ -76,7 +77,7 @@ namespace PracticaMvcCore2Acl.Controllers
                 carritoIds = new List<int>();
             }
 
-            List<Libro> libros = await this.repo.FindLibrosCarrito(carritoIds);
+            List<Libro> libros = await this.repo.FindLibrosCarritoAsync(carritoIds);
 
             return View(libros);
         }
@@ -90,15 +91,24 @@ namespace PracticaMvcCore2Acl.Controllers
                 carritoIds = new List<int>();
             }
 
-            List<Libro> libros = await this.repo.FindLibrosCarrito(carritoIds);
+            await this.repo.FinalizarCompraLibrosAsync(carritoIds, int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
 
-            return View("Carrito");
+            HttpContext.Session.Remove("CarritoIds");
+
+            return RedirectToAction("ComprasUsuario");
         }
 
         [AuthorizeUsuario]
         public async Task<IActionResult> Perfil()
         {
             return View();
+        }
+
+        [AuthorizeUsuario]
+        public async Task<IActionResult> ComprasUsuario()
+        {
+            List<VistaPedido> pedidosUser = await this.repo.GetComprasUsuarioAsync(int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return View(pedidosUser);
         }
     }
 }
