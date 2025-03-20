@@ -1,0 +1,30 @@
+﻿@model Libro
+
+<div class="container mt-2">
+	<div class="row">
+		<div class="col-3">
+			<img src="~/images/@Model.Portada" alt="@Model.Titulo" width="150"/>
+		</div>
+		<div class="col-9">
+			<h2>@Model.Titulo</h2>
+			<h3>@Model.Autor</h3>
+			<h4>@Model.Editorial</h4>
+			<h5>Precio: @Model.Precio€</h5>
+		</div>
+		<div class="col-12">
+			<p><b>Sinopsis:</b></p>
+			<p>@Model.Resumen</p>
+		</div>
+
+		@{
+			List<int> ids = @Context.Session.GetObject<List<int>>("CarritoIds") ?? new List<int>();
+		}
+
+		@if (ids != null && ids.Contains(Model.IdLibro) == false)
+		{
+			<div class="col-12">
+				<a class="btn btn-light" asp-controller="Libros" asp-action="AddCarrito" asp-route-idlibro="@Model.IdLibro">Comprar</a>
+			</div>
+		}
+	</div>
+</div>

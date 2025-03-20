@@ -1,0 +1,20 @@
+﻿@model List<Libro>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Libros</h1>
+
+<div class="container mt-2">
+    <div class="row row-cols-1 row-cols-md-3 g-2">
+        @foreach(Libro libro in Model){
+            <div class="col text-center p-2 bg-light border border-1">
+                <div class="w-100">
+                    <img src="~/images/@libro.Portada" alt="@libro.Titulo" width="150"/>
+                </div>
+                <a class="h4" asp-controller="Libros" asp-action="DetalleLibro" asp-route-idlibro="@libro.IdLibro">@libro.Titulo</a>
+            </div>
+        }
+    </div>
+</div>

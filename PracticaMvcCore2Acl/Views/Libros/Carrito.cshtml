@@ -1,0 +1,69 @@
+﻿@model IEnumerable<PracticaMvcCore2Acl.Models.Libro>
+
+@{
+    ViewData["Title"] = "Carrito";
+}
+
+﻿@{
+    var carritoIds = Context.Session.GetObject<List<int>>("CarritoIds") ?? new List<int>();
+    var numProductos = carritoIds.Count;
+}
+
+<h1>Carrito</h1>
+
+@if (numProductos == 0)
+{
+    <h3 class="text-danger">No hay libros en el carrito</h3>
+}
+else
+{
+    <p>
+        <a asp-controller="Libros" asp-action="Finalizar">Finalizar compra</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Titulo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Autor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Editorial)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Portada)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Precio)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Autor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Editorial)
+                </td>
+                <td>
+                    <img src="~/images/@item.Portada" alt="@item.Titulo" width="150"/>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Precio)
+                </td>
+                <td>
+                    @Html.ActionLink("Quitar", "RemoveCarrito", new { idlibro=item.IdLibro })
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}

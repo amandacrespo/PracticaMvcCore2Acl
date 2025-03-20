@@ -1,0 +1,41 @@
+﻿﻿@{
+    var carritoIds = Context.Session.GetObject<List<int>>("CarritoIds") ?? new List<int>();
+    var numProductos = carritoIds.Count;
+}
+
+<li class="nav-item">
+    <a asp-controller="Libros"
+       asp-action="Carrito"
+       class="nav-link">
+        Carrito: @numProductos
+    </a>
+</li>
+
+@if (!Context.User.Identity.IsAuthenticated)
+{
+    <li class="nav-item">
+        <a asp-controller="Managed"
+           asp-action="Login"
+           class="nav-link">
+            Login
+        </a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a asp-controller="Libros"
+           asp-action="Perfil"
+           class="nav-link">
+            <img src="~/images/@Context.User.FindFirst("Foto").Value" width="20" class="rounded-5"/>
+            Hola, @Context.User.FindFirst("Nombre").Value
+        </a>
+    </li>
+    <li class="nav-item">
+        <a asp-controller="Managed"
+           asp-action="Logout"
+           class="nav-link">
+            Cerrar sesión
+        </a>
+    </li>
+}
